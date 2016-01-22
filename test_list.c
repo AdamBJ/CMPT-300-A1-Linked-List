@@ -58,7 +58,6 @@ int main(int argc, char** argv)
 	assert(current->item == 0);
 	assert(current->next == NULL);
 
-
 	printf("\nExecution finished.\n");
 	return 0;
 }
