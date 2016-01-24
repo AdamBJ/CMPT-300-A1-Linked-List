@@ -29,10 +29,30 @@ struct nodeStruct* List_createNode(int item) {
 	return newNode;
 }
 
+int List_nodeAlreadyInserted(struct nodeStruct *headRef, struct nodeStruct *node) {
+	struct nodeStruct *curr = headRef;
+
+	while(curr != NULL) {
+		if (curr == node)
+			return 1;
+		curr = curr -> next;
+	}
+
+	return 0;
+}
+
 /*
  * Insert node at the head of the list.
  */
 void List_insertHead (struct nodeStruct **headRef, struct nodeStruct *node) {
+	/*If node is a null pointer or node is already present in the list we return
+	 * without inserting anything.*/
+	if (node == NULL || List_nodeAlreadyInserted(*headRef, node))
+		return;
+
+	if (List_nodeAlreadyInserted(*headRef, node))
+		return;
+
 	node -> next = *headRef;
 	*headRef = node;
 }
@@ -41,6 +61,9 @@ void List_insertHead (struct nodeStruct **headRef, struct nodeStruct *node) {
  * Insert node after the tail of the list.
  */
 void List_insertTail (struct nodeStruct **headRef, struct nodeStruct *node) {
+	if (node == NULL || List_nodeAlreadyInserted(*headRef, node))
+		return;
+
 	struct nodeStruct* temp = *headRef;
 
 	while (temp -> next != NULL) {
@@ -89,12 +112,10 @@ struct nodeStruct* List_findNode(struct nodeStruct *head, int item) {
  * should be set to NULL.
  */
 void List_deleteNode (struct nodeStruct **headRef, struct nodeStruct *node) {
-	assert (node != NULL);
-
 	struct nodeStruct *prev, *curr;
 	prev = curr = *headRef;
 
-	/*We assume that the node exists*/
+	/*We assume that the node exists.*/
 	while (curr != node) {
 		prev = curr;
 		curr = curr -> next;
@@ -116,7 +137,7 @@ void List_sort (struct nodeStruct **headRef) {
 	if (*headRef == NULL)
 		return;
 
-	struct nodeStruct* sortedHeadRef = NULL;
+	struct nodeStruct *sortedHeadRef = NULL;
 	struct nodeStruct *currRef, *currMaxNodeRef;
 	currRef = currMaxNodeRef = *headRef;
 
@@ -124,7 +145,6 @@ void List_sort (struct nodeStruct **headRef) {
 	for (int i = 0; i < numElems; i++) {
 		/*Scan through the list to find the maximal element*/
 		while (currRef != NULL) {
-			//printf("curr: %d, max: %d \n", currRef -> item, currMaxNodeRef -> item);
 			if ((currRef -> item) > (currMaxNodeRef -> item))
 				currMaxNodeRef = currRef;
 			currRef = currRef -> next;
@@ -139,4 +159,13 @@ void List_sort (struct nodeStruct **headRef) {
 	}
 
 	*headRef = sortedHeadRef;
+}
+
+void List_print (struct nodeStruct *headRef) {
+	struct nodeStruct *currentNodeRef = headRef;
+
+	while (currentNodeRef != NULL) {
+		printf("%d ", currentNodeRef -> item);
+		currentNodeRef = currentNodeRef -> next;
+	}
 }

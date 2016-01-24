@@ -18,6 +18,8 @@ struct nodeStruct {
  */
 struct nodeStruct* List_createNode(int item);
 
+int List_nodeAlreadyInserted(struct nodeStruct *head, struct nodeStruct *node);
+
 /*
  * Insert node at the head of the list.
  */
@@ -53,5 +55,7 @@ void List_deleteNode (struct nodeStruct **headRef, struct nodeStruct *node);
  * Any sorting algorithm is fine.
  */
 void List_sort (struct nodeStruct **headRef);
+
+void List_print (struct nodeStruct *headRef);
 
 #endif
