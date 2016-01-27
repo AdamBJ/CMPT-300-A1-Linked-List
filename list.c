@@ -23,12 +23,14 @@ struct nodeStruct* List_createNode(int item) {
 		return NULL;
 	}
 
-	(*newNode).item = item;
-	(*newNode).next = NULL;
+	newNode -> item = item;
+	newNode -> next = NULL;
 
 	return newNode;
 }
 
+/*Checks if the node is already in the list and rejects. We check for the
+ * node object itself, not the item stored inside it.*/
 int List_nodeAlreadyInserted(struct nodeStruct *headRef, struct nodeStruct *node) {
 	struct nodeStruct *curr = headRef;
 
@@ -48,9 +50,6 @@ void List_insertHead (struct nodeStruct **headRef, struct nodeStruct *node) {
 	/*If node is a null pointer or node is already present in the list we return
 	 * without inserting anything.*/
 	if (node == NULL || List_nodeAlreadyInserted(*headRef, node))
-		return;
-
-	if (List_nodeAlreadyInserted(*headRef, node))
 		return;
 
 	node -> next = *headRef;
@@ -143,7 +142,8 @@ void List_sort (struct nodeStruct **headRef) {
 
 	int numElems = List_countNodes(*headRef);
 	for (int i = 0; i < numElems; i++) {
-		/*Scan through the list to find the maximal element*/
+		/*Scan through the list to find the maximal element. Insert it
+		 * into the sorted list.*/
 		while (currRef != NULL) {
 			if ((currRef -> item) > (currMaxNodeRef -> item))
 				currMaxNodeRef = currRef;
@@ -153,7 +153,6 @@ void List_sort (struct nodeStruct **headRef) {
 		List_insertHead(&sortedHeadRef, List_createNode(currMaxNodeRef -> item));
 		List_deleteNode(headRef, currMaxNodeRef);
 
-		/*Reset*/
 		currRef = *headRef;
 		currMaxNodeRef = *headRef;
 	}
@@ -168,4 +167,6 @@ void List_print (struct nodeStruct *headRef) {
 		printf("%d ", currentNodeRef -> item);
 		currentNodeRef = currentNodeRef -> next;
 	}
+
+	printf("\n");
 }
