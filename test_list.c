@@ -23,6 +23,7 @@ int main(int argc, char** argv)
 	assert(List_findNode(head, 0) == firstNode);
 	assert(List_findNode(head, 1) == NULL);
 
+
 	// Insert tail:
 	struct nodeStruct* lastNode = List_createNode(-5);
 	List_insertTail(&head, lastNode);
@@ -30,6 +31,8 @@ int main(int argc, char** argv)
 	assert(List_findNode(head, 0) == firstNode);
 	assert(List_findNode(head, -5) == lastNode);
 	assert(List_findNode(head, 1) == NULL);
+
+
 
 	// Verify list:
 	struct nodeStruct *current = head;
@@ -39,7 +42,8 @@ int main(int argc, char** argv)
 	assert(current->item == -5);
 	assert(current->next == NULL);
 
-	// Sort and verify:
+
+	 //Sort and verify:
     List_sort(&head);
     current = head;
     assert(current->item == -5);
@@ -47,20 +51,25 @@ int main(int argc, char** argv)
     current = current->next;
     assert(current->item == 0);
     assert(current->next == NULL);
-
-	// Delete
+//
+//    List_print(head);
+//	List_deleteNode(&head, firstNode);
+//	List_print(head);
+//	List_deleteNode(&head, lastNode);
+//	//List_print(head);
+	 //Delete
 	assert(List_countNodes(head) == 2);
 	List_deleteNode(&head, firstNode);
 	assert(List_countNodes(head) == 1);
-	assert(List_findNode(head, -5) == NULL);
-	assert(List_findNode(head, 0) != NULL);
+	assert(List_findNode(head, -5) != NULL);
+	assert(List_findNode(head, 0) == NULL);
 	assert(List_findNode(head, 1) == NULL);
 	current = head;
-	assert(current->item == 0);
+	assert(current->item == -5);
 	assert(current->next == NULL);
 
 	// Adam tests
-	struct nodeStruct *nonIntTrubbi = List_createNode("fart");
+	//struct nodeStruct *nonIntTrubbi = List_createNode("fart");
 
 	struct nodeStruct *dupiTroubleMaker = List_createNode(-666);
 	List_insertHead(&head, dupiTroubleMaker);
@@ -95,6 +104,12 @@ int main(int argc, char** argv)
 	printf("\nAfter sort:");
 	List_sort(&head);
 	List_print(head);
+	struct nodeStruct *prev = head;
+	while (head != NULL) {
+		head = head->next;
+		free(prev);
+		prev = head;
+	}
 
 	printf("\nExecution finished.\n");
 	return 0;

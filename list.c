@@ -114,6 +114,11 @@ struct nodeStruct* List_findNode(struct nodeStruct *head, int item) {
  * should be set to NULL.
  */
 void List_deleteNode (struct nodeStruct **headRef, struct nodeStruct *node) {
+	if (List_countNodes(*headRef) == 1) {
+		free(*headRef);
+		return;
+	}
+
 	struct nodeStruct *prev, *curr;
 	prev = curr = *headRef;
 
@@ -140,24 +145,32 @@ void List_sort (struct nodeStruct **headRef) {
 		return;
 
 	struct nodeStruct *sortedHeadRef = NULL;
-	struct nodeStruct *currNodeRef, *currMaxNodeRef;
-	currNodeRef = currMaxNodeRef = *headRef;
+	struct nodeStruct *currNodeRef, *prevNodeRef, *currMaxNodeRef, *currMaxNodePredRef;
+	currNodeRef = prevNodeRef = currMaxNodeRef = currMaxNodePredRef = *headRef;
 
 	int numElems = List_countNodes(*headRef);
 	for (int i = 0; i < numElems; i++) {
 		/*Scan through the list to find the maximal element. Insert it
 		 * into the sorted list.*/
 		while (currNodeRef != NULL) {
-			if ((currNodeRef -> item) > (currMaxNodeRef -> item))
+			if ((currNodeRef -> item) > (currMaxNodeRef -> item)) {
+				currMaxNodePredRef = prevNodeRef;
 				currMaxNodeRef = currNodeRef;
+			}
+			prevNodeRef = currNodeRef;
 			currNodeRef = currNodeRef -> next;
 		}
+		if(currMaxNodeRef == *headRef)
+			*headRef = currMaxNodeRef -> next;
 
-		List_insertHead(&sortedHeadRef, List_createNode(currMaxNodeRef -> item));
-		List_deleteNode(headRef, currMaxNodeRef);
+		currMaxNodePredRef -> next = currMaxNodeRef -> next;
+		currMaxNodeRef -> next = NULL;
+		List_insertHead(&sortedHeadRef, currMaxNodeRef);
 
 		currNodeRef = *headRef;
-		currMaxNodeRef = *headRef;
+		currMaxNodeRef = currMaxNodePredRef = *headRef;
+		//List_print(*headRef);
+		//List_print(sortedHeadRef);
 	}
 
 	*headRef = sortedHeadRef;
